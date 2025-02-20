@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import {
-  Drive,
+  HardDrive,
   FileSpreadsheet,
   FileText,
   Video,
@@ -22,7 +22,7 @@ const Index = () => {
     {
       title: "Google Drive",
       description: "Access and manage all MTSS documents",
-      icon: <Drive className="w-6 h-6" />,
+      icon: <HardDrive className="w-6 h-6" />,
     },
     {
       title: "Google Forms",

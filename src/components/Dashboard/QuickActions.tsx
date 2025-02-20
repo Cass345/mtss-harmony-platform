@@ -1,5 +1,6 @@
 
 import { FileText, Users, PieChart, Calendar } from "lucide-react";
+import { motion } from "framer-motion";
 
 const QuickActions = () => {
   const actions = [
