@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Home,
@@ -14,6 +15,7 @@ import {
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const navItems = [
     { icon: <Home className="w-5 h-5" />, label: "Dashboard", path: "/" },
@@ -60,15 +62,19 @@ const Navigation = () => {
 
           <div className="space-y-2">
             {navItems.map((item) => (
-              <motion.a
+              <Link
                 key={item.label}
-                href={item.path}
-                whileHover={{ x: 4 }}
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                to={item.path}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
+                  location.pathname === item.path
+                    ? "bg-gray-100 text-gray-900"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
               >
                 {item.icon}
                 <span>{item.label}</span>
-              </motion.a>
+              </Link>
             ))}
           </div>
         </div>
