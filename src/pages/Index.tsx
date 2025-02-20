@@ -8,15 +8,19 @@ import {
   PieChart,
   Presentation,
   Globe,
+  Search,
+  Bell,
 } from "lucide-react";
 import Navigation from "../components/Layout/Navigation";
 import ServiceCard from "../components/Dashboard/ServiceCard";
 import WelcomeHeader from "../components/Dashboard/WelcomeHeader";
 import QuickActions from "../components/Dashboard/QuickActions";
 import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const services = [
     {
@@ -63,26 +67,61 @@ const Index = () => {
     },
   ];
 
+  const filteredServices = services.filter(
+    service =>
+      service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      service.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         <Navigation />
         
         <main className="flex-1 p-8">
-          <WelcomeHeader />
+          <div className="flex justify-between items-center mb-8">
+            <WelcomeHeader />
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  type="search"
+                  placeholder="Search services..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 w-64"
+                />
+              </div>
+              <button className="relative p-2 rounded-full hover:bg-gray-100">
+                <Bell className="w-5 h-5 text-gray-600" />
+                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+              </button>
+            </div>
+          </div>
+
           <QuickActions />
 
-          <section className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Google Services Integration
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {services.map((service, index) => (
+          <section className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-gray-900">
+                Google Services Integration
+              </h2>
+              <div className="text-sm text-gray-500">
+                {filteredServices.length} services available
+              </div>
+            </div>
+
+            <motion.div 
+              layout
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            >
+              {filteredServices.map((service, index) => (
                 <motion.div
                   key={service.title}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
+                  layout
                 >
                   <ServiceCard
                     title={service.title}
@@ -94,7 +133,17 @@ const Index = () => {
                   />
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
+
+            {filteredServices.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-8 text-gray-500"
+              >
+                No services found matching your search.
+              </motion.div>
+            )}
           </section>
         </main>
       </div>
